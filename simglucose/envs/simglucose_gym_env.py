@@ -1,3 +1,6 @@
+from importlib import resources
+import logging
+
 from simglucose.simulation.env import T1DSimEnv as _T1DSimEnv
 from simglucose.patient.t1dpatient import T1DPatient
 from simglucose.sensor.cgm import CGMSensor
@@ -12,11 +15,11 @@ from gym.utils import seeding
 from datetime import datetime
 import gymnasium
 
+logger = logging.getLogger(__name__)
 
-PATIENT_PARA_FILE = pkg_resources.resource_filename(
-    "simglucose", "params/vpatient_params.csv"
-)
-
+# Modern resource access
+package_path = resources.files("simglucose")
+PATIENT_PARA_FILE = str(package_path / "simglucose" / "params" / "vpatient_params.csv")
 
 class T1DSimEnv(gym.Env):
     """

@@ -2,14 +2,13 @@ from .base import Controller
 from .base import Action
 import numpy as np
 import pandas as pd
-import pkg_resources
+from importlib import resources
 import logging
 
 logger = logging.getLogger(__name__)
-CONTROL_QUEST = pkg_resources.resource_filename('simglucose',
-                                                'params/Quest.csv')
-PATIENT_PARA_FILE = pkg_resources.resource_filename(
-    'simglucose', 'params/vpatient_params.csv')
+package_path = resources.files('simglucose')
+CONTROL_QUEST = str(package_path / 'params' / 'Quest.csv')
+PATIENT_PARA_FILE = str(package_path / 'params' / 'vpatient_params.csv')
 
 
 class BBController(Controller):

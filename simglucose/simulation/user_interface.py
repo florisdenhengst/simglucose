@@ -1,33 +1,30 @@
-from simglucose.simulation.sim_engine import SimObj, batch_sim
-from simglucose.simulation.env import T1DSimEnv
-from simglucose.controller.basal_bolus_ctrller import BBController
-from simglucose.sensor.cgm import CGMSensor
-from simglucose.actuator.pump import InsulinPump
-from simglucose.patient.t1dpatient import T1DPatient
-from simglucose.simulation.scenario_gen import RandomScenario
-from simglucose.simulation.scenario import CustomScenario
-from simglucose.analysis.report import report
-import pandas as pd
 import copy
-import pkg_resources
 import logging
 import os
-from datetime import datetime
-from datetime import timedelta
 import platform
+from datetime import datetime, timedelta
+from importlib import resources
+
+import pandas as pd
+
+from simglucose.actuator.pump import InsulinPump
+from simglucose.analysis.report import report
+from simglucose.controller.basal_bolus_ctrller import BBController
+from simglucose.patient.t1dpatient import T1DPatient
+from simglucose.sensor.cgm import CGMSensor
+from simglucose.simulation.env import T1DSimEnv
+from simglucose.simulation.scenario import CustomScenario
+from simglucose.simulation.scenario_gen import RandomScenario
+from simglucose.simulation.sim_engine import SimObj, batch_sim
 
 logger = logging.getLogger(__name__)
 
-PATIENT_PARA_FILE = pkg_resources.resource_filename(
-    "simglucose", "params/vpatient_params.csv"
-)
-SENSOR_PARA_FILE = pkg_resources.resource_filename(
-    "simglucose", "params/sensor_params.csv"
-)
-INSULIN_PUMP_PARA_FILE = pkg_resources.resource_filename(
-    "simglucose", "params/pump_params.csv"
-)
+# Modern resource access
+package_path = resources.files("simglucose")
 
+PATIENT_PARA_FILE = str(package_path / "simglucose" / "params" / "vpatient_params.csv")
+SENSOR_PARA_FILE = str(package_path / "simglucose" / "params" / "sensor_params.csv")
+INSULIN_PUMP_PARA_FILE = str(package_path / "simglucose" / "params" / "pump_params.csv")
 
 def pick_patients():
     patient_params = pd.read_csv(PATIENT_PARA_FILE)

@@ -1,19 +1,22 @@
-from .base import Patient
-import numpy as np
-from scipy.integrate import ode
-import pandas as pd
-from collections import namedtuple
 import logging
-import pkg_resources
+from collections import namedtuple
+from importlib import resources
+
+import numpy as np
+import pandas as pd
+from scipy.integrate import ode
+
+from .base import Patient
 
 logger = logging.getLogger(__name__)
 
+# Define namedtuples for clarity
 Action = namedtuple("patient_action", ["CHO", "insulin"])
 Observation = namedtuple("observation", ["Gsub"])
 
-PATIENT_PARA_FILE = pkg_resources.resource_filename(
-    "simglucose", "params/vpatient_params.csv"
-)
+# Modern resource access (Python 3.9+)
+package_path = resources.files("simglucose")
+PATIENT_PARA_FILE = str(package_path / "simglucose" / "params" / "vpatient_params.csv")
 
 
 class T1DPatient(Patient):

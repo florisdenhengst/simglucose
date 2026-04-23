@@ -1,10 +1,11 @@
-import pkg_resources
+from importlib import resources
 import pandas as pd
 
-CONTROL_QUEST = pkg_resources.resource_filename('simglucose',
-                                                'params/Quest.csv')
-PATIENT_PARA_FILE = pkg_resources.resource_filename(
-    'simglucose', 'params/vpatient_params.csv')
+# Modern resource access (Python 3.9+)
+package_path = resources.files('simglucose')
+
+CONTROL_QUEST = str(package_path / "simglucose" / "params" / "Quest.csv")
+PATIENT_PARA_FILE = str(package_path / "simglucose" / "params" / "vpatient_params.csv")
 
 
 def fetch_patient_params(patient_name: str):

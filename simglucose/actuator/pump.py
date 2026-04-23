@@ -1,11 +1,14 @@
-import pandas as pd
-import pkg_resources
 import logging
-import numpy as np
+from importlib import resources
 
-INSULIN_PUMP_PARA_FILE = pkg_resources.resource_filename(
-    'simglucose', 'params/pump_params.csv')
+import numpy as np
+import pandas as pd
+
 logger = logging.getLogger(__name__)
+
+# Modern resource access
+package_path = resources.files('simglucose')
+INSULIN_PUMP_PARA_FILE = str(package_path / "simglucose" / "params" / "pump_params.csv")
 
 
 class InsulinPump(object):
