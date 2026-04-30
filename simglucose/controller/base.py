@@ -1,7 +1,7 @@
 from collections import namedtuple
 
-Action = namedtuple('ctrller_action', ['basal', 'bolus'])
-
+Action = namedtuple('ctrller_action', ['basal', 'bolus', ])
+ExerciseAction = namedtuple('ctrller_action', ['basal', 'bolus', 'exercise_intensity'])
 
 class Controller(object):
     def __init__(self, init_state):
@@ -23,7 +23,7 @@ class Controller(object):
         ----
         Output:
         action - a namedtuple defined at the beginning of this file. The
-                 controller action contains two entries: basal, bolus
+                 controller action contains three entries: basal, bolus, exercise_intensity
         '''
         raise NotImplementedError
 

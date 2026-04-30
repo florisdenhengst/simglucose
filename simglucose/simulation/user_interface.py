@@ -11,6 +11,7 @@ from simglucose.actuator.pump import InsulinPump
 from simglucose.analysis.report import report
 from simglucose.controller.basal_bolus_ctrller import BBController
 from simglucose.patient.t1dpatient import T1DPatient
+from simglucose.patient.t1d_exercise_patient import T1DExercisePatient
 from simglucose.sensor.cgm import CGMSensor
 from simglucose.simulation.env import T1DSimEnv
 from simglucose.simulation.scenario import CustomScenario
@@ -317,6 +318,7 @@ def simulate(
     save_path=None,
     animate=None,
     parallel=None,
+    patient_class=T1DPatient,
 ):
     """
     Main user interface.
@@ -374,7 +376,7 @@ def simulate(
     cgm_sensor = CGMSensor.withName(cgm_name, seed=cgm_seed)
 
     def local_build_env(pname):
-        patient = T1DPatient.withName(pname)
+        patient = patient_class.withName(pname)
         insulin_pump = InsulinPump.withName(insulin_pump_name)
         scen = copy.deepcopy(scenario)
         env = T1DSimEnv(patient, cgm_sensor, insulin_pump, scen)

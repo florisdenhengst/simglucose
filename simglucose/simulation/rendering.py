@@ -15,12 +15,13 @@ class Viewer(object):
 
     def initialize(self):
         plt.ion()
-        fig, axes = plt.subplots(4)
+        fig, axes = plt.subplots(5)
 
         axes[0].set_ylabel('BG (mg/dL)')
         axes[1].set_ylabel('CHO (g/min)')
         axes[2].set_ylabel('Insulin (U/min)')
         axes[3].set_ylabel('Risk Index')
+        axes[4].set_ylabel('Exercise (%VO2max)')
 
         lineBG, = axes[0].plot([], [], label='BG')
         lineCGM, = axes[0].plot([], [], label='CGM')
@@ -28,15 +29,18 @@ class Viewer(object):
         lineIns, = axes[2].plot([], [], label='Insulin')
         lineLBGI, = axes[3].plot([], [], label='Hypo Risk')
         lineHBGI, = axes[3].plot([], [], label='Hyper Risk')
-        lineRI, = axes[3].plot([], [], label='Risk Index')
+        # create dashed line for total risk
+        lineRI, = axes[3].plot([], [], label='Risk Index', linestyle='--')
+        lineExercise, = axes[4].plot([], [], label='Exercise')
 
-        lines = [lineBG, lineCGM, lineCHO, lineIns, lineLBGI, lineHBGI, lineRI]
+        lines = [lineBG, lineCGM, lineCHO, lineIns, lineLBGI, lineHBGI, lineRI, lineExercise]
 
         axes[0].set_ylim([70, 180])
         axes[1].set_ylim([-5, 30])
         axes[2].set_ylim([-0.5, 1])
-        axes[3].set_ylim([0, 5])
-
+        axes[3].set_ylim([-.5, 5])
+        axes[4].set_ylim([-.5, 1])
+        
         for ax in axes:
             ax.set_xlim(
                 [self.start_time, self.start_time + timedelta(hours=3)])
@@ -52,10 +56,11 @@ class Viewer(object):
         axes[0].tick_params(labelbottom=False)
         axes[1].tick_params(labelbottom=False)
         axes[2].tick_params(labelbottom=False)
-        axes[3].xaxis.set_minor_locator(mdates.AutoDateLocator())
-        axes[3].xaxis.set_minor_formatter(mdates.DateFormatter('%H:%M\n'))
-        axes[3].xaxis.set_major_locator(mdates.DayLocator())
-        axes[3].xaxis.set_major_formatter(mdates.DateFormatter('\n%b %d'))
+        axes[3].tick_params(labelbottom=False)
+        axes[4].xaxis.set_minor_locator(mdates.AutoDateLocator())
+        axes[4].xaxis.set_minor_formatter(mdates.DateFormatter('%H:%M\n'))
+        axes[4].xaxis.set_major_locator(mdates.DayLocator())
+        axes[4].xaxis.set_major_formatter(mdates.DateFormatter('\n%b %d'))
 
         axes[0].set_title(self.patient_name)
 
@@ -105,13 +110,19 @@ class Viewer(object):
 
         self.lines[6].set_xdata(data.index.values)
         self.lines[6].set_ydata(data['Risk'].values)
-
+    
         self.axes[3].draw_artist(self.axes[3].patch)
         self.axes[3].draw_artist(self.lines[4])
         self.axes[3].draw_artist(self.lines[5])
         self.axes[3].draw_artist(self.lines[6])
-        adjust_ylim(self.axes[3], min(data['Risk']), max(data['Risk']))
-        adjust_xlim(self.axes[3], data.index[-1], xlabel=True)
+        adjust_ylim(self.axes[3], -.2, max(data['Risk']))
+        adjust_xlim(self.axes[3], data.index[-1], xlabel=False)
+        
+    
+        self.lines[7].set_xdata(data.index.values)
+        self.lines[7].set_ydata(data['Exercise'].values)
+        
+        adjust_xlim(self.axes[4], data.index[-1], xlabel=True)
 
         self.update()
 

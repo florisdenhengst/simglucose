@@ -7,8 +7,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 package_path = resources.files('simglucose')
-CONTROL_QUEST = str(package_path / 'params' / 'Quest.csv')
-PATIENT_PARA_FILE = str(package_path / 'params' / 'vpatient_params.csv')
+CONTROL_QUEST = str(package_path / "simglucose" / 'params' / 'Quest.csv')
+PATIENT_PARA_FILE = str(package_path / "simglucose" / 'params' / 'vpatient_params.csv')
 
 
 class BBController(Controller):
@@ -27,7 +27,7 @@ class BBController(Controller):
         pname = kwargs.get('patient_name')
         meal = kwargs.get('meal')  # unit: g/min
 
-        action = self._bb_policy(pname, meal, observation.CGM, sample_time)
+        action = self._bb_policy(pname, meal, observation, sample_time)
         return action
 
     def _bb_policy(self, name, meal, glucose, env_sample_time):

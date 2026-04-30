@@ -50,8 +50,8 @@ class T1DSimEnv(gym.Env):
         self.env, _, _, _ = self._create_env()
 
     def _step(self, action: float):
-        # This gym only controls basal insulin
-        act = Action(basal=action, bolus=0)
+        # This gym controls both basal and bolus insulin
+        act = Action(basal=action[0], bolus=0,)
         if self.reward_fun is None:
             return self.env.step(act)
         return self.env.step(act, reward_fun=self.reward_fun)

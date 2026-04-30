@@ -95,6 +95,7 @@ class T1DSimEnv(object):
         self.risk_hist.append(risk)
         self.LBGI_hist.append(LBGI)
         self.HBGI_hist.append(HBGI)
+        self.exercise_hist.append(action.exercise_intensity)  # Record exercise intensity
 
         # Compute reward, and decide whether game is over
         window_size = int(60 / self.sample_time)
@@ -134,6 +135,7 @@ class T1DSimEnv(object):
         self.HBGI_hist = [HBGI]
         self.CHO_hist = []
         self.insulin_hist = []
+        self.exercise_hist = []
 
     def reset(self):
         self.patient.reset()
@@ -183,5 +185,6 @@ class T1DSimEnv(object):
         df["LBGI"] = pd.Series(self.LBGI_hist)
         df["HBGI"] = pd.Series(self.HBGI_hist)
         df["Risk"] = pd.Series(self.risk_hist)
+        df["Exercise"] = pd.Series(self.exercise_hist) if hasattr(self, 'exercise_hist') else pd.Series([0]*len(self.time_hist))
         df = df.set_index("Time")
         return df
